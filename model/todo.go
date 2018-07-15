@@ -1,10 +1,10 @@
-package todo
+package model
 
 type Todo struct {
-	Id        int
-	Name      string
-	todoItems []TodoItem
-	isPending bool
+	Id        int        `json:"id"`
+	Name      string     `json:"name"`
+	todoItems []TodoItem `json:"items"`
+	isPending bool       `json:"isPending"`
 }
 
 type TodoItem struct {

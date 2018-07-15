@@ -1,5 +1,6 @@
 [ ] models first
-  [ ] todo
-  [ ] todo items
   [ ] todo status
-
+  [ ] todo items
+  [X] todo
+[ ] router
+  [ ] setup routing
