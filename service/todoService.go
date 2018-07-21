@@ -14,6 +14,12 @@ type todoService struct {
 	todoRepository repository.TodoRepository
 }
 
+func NewTodoService(todoRepository repository.TodoRepository) todoService {
+	return todoService{
+		todoRepository: todoRepository,
+	}
+}
+
 func (this *todoService) CreateTodo(request CreateTodoRequest) error {
 	todo, err := this.createTodoFromRequest(request)
 	if err != nil {
