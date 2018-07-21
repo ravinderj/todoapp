@@ -7,6 +7,13 @@ type Todo struct {
 	isPending bool       `json:"isPending"`
 }
 
+// type TodoDao struct {
+// 	Id        bson.ObjectId `bson:"_id"`
+// 	Name      bson.ObjectId `bson:"name"`
+// 	TodoItems bson.ObjectId `bson:"items"`
+// 	IsPending bson.ObjectId `bson:"isPending"`
+// }
+
 type TodoItem struct {
 	Id          int
 	description string

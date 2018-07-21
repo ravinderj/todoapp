@@ -1,33 +1,32 @@
 package handler
 
 import (
-	"todoapp/model"
+	"net/http"
+	"todoapp/service"
 
 	"github.com/gin-gonic/gin"
 )
 
 type todoHandler struct {
-	Todos []model.Todo
+	todoService service.TodoService
 }
 
-func NewTodoHandler(todos []model.Todo) todoHandler {
+func NewTodoHandler(service service.TodoService) todoHandler {
 	return todoHandler{
-		Todos: todos,
+		todoService: service,
 	}
 }
 
 func (this *todoHandler) GetTodoList(context *gin.Context) {
-	context.JSON(200, this.Todos)
+	context.JSON(http.StatusOK, nil)
 }
 
 func (this *todoHandler) CreateTodo(context *gin.Context) {
 	request := createTodoRequest{}
 	context.Bind(&request)
-	todo := model.NewTodo(1, request.Name)
-	this.Todos = append(this.Todos, todo)
-	context.JSON(202, todo)
-}
-
-type createTodoRequest struct {
-	Name string `form:"name"`
+	response, err := this.todoService.CreateTodo(request)
+	if err != nil {
+		context.Error(err)
+	}
+	context.JSON(http.StatusCreated, response)
 }
