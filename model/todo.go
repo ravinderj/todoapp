@@ -1,52 +1,45 @@
 package model
 
 type Todo struct {
-	Id        int        `json:"id"`
-	Name      string     `json:"name"`
-	todoItems []TodoItem `json:"items"`
-	isPending bool       `json:"isPending"`
+	// Id   int    `json:"id"`
+	Name string `json:"name"`
+	// TodoItems []TodoItem `bson:"items"`
+	IsPending bool `json:"isPending"`
 }
 
-// type TodoDao struct {
-// 	Id        bson.ObjectId `bson:"_id"`
-// 	Name      bson.ObjectId `bson:"name"`
-// 	TodoItems bson.ObjectId `bson:"items"`
-// 	IsPending bson.ObjectId `bson:"isPending"`
+// type TodoItem struct {
+// 	Id          int
+// 	description string
 // }
 
-type TodoItem struct {
-	Id          int
-	description string
-}
-
-func NewTodo(id int, name string) Todo {
+func NewTodo(name string) Todo {
 	return Todo{
-		Id:   id,
-		Name: name,
+		Name:      name,
+		IsPending: false,
 	}
 }
 
-func NewTodoItem(id int, description string) TodoItem {
-	return TodoItem{
-		Id:          id,
-		description: description,
-	}
-}
+// func NewTodoItem(id int, description string) TodoItem {
+// 	return TodoItem{
+// 		Id:          id,
+// 		description: description,
+// 	}
+// }
 
-func (this *Todo) AddItem(item TodoItem) {
-	this.todoItems = append(this.todoItems, item)
-}
+// func (this *Todo) AddItem(item TodoItem) {
+// 	this.TodoItems = append(this.TodoItems, item)
+// }
 
-func (this *Todo) RemoveItem(id int) {
-	index := findIndexById(this.todoItems, id)
-	this.todoItems = append(this.todoItems[:index], this.todoItems[index+1:]...)
-}
+// func (this *Todo) RemoveItem(id int) {
+// 	index := findIndexById(this.TodoItems, id)
+// 	this.TodoItems = append(this.TodoItems[:index], this.TodoItems[index+1:]...)
+// }
 
-func findIndexById(todoItems []TodoItem, itemId int) int {
-	for index, item := range todoItems {
-		if item.Id == itemId {
-			return index
-		}
-	}
-	return 0
-}
+// func findIndexById(todoItems []TodoItem, itemId int) int {
+// 	for index, item := range todoItems {
+// 		if item.Id == itemId {
+// 			return index
+// 		}
+// 	}
+// 	return 0
+// }

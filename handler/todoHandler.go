@@ -18,15 +18,19 @@ func NewTodoHandler(service service.TodoService) todoHandler {
 }
 
 func (this *todoHandler) GetTodoList(context *gin.Context) {
-	context.JSON(http.StatusOK, nil)
-}
-
-func (this *todoHandler) CreateTodo(context *gin.Context) {
-	request := createTodoRequest{}
-	context.Bind(&request)
-	response, err := this.todoService.CreateTodo(request)
+	todos, err := this.todoService.GetTodos()
 	if err != nil {
 		context.Error(err)
 	}
-	context.JSON(http.StatusCreated, response)
+	context.JSON(http.StatusOK, todos)
+}
+
+func (this *todoHandler) CreateTodo(context *gin.Context) {
+	request := service.CreateTodoRequest{}
+	context.Bind(&request)
+	err := this.todoService.CreateTodo(request)
+	if err != nil {
+		context.Error(err)
+	}
+	context.JSON(http.StatusCreated, nil)
 }

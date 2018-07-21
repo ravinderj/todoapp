@@ -1,21 +1,48 @@
 package service
 
+import (
+	"todoapp/model"
+	"todoapp/repository"
+)
+
 type TodoService interface {
-	CreateTodo(request CreateTodoRequest) (CreateTodoResponse, err)
+	CreateTodo(request CreateTodoRequest) error
+	GetTodos() ([]model.Todo, error)
 }
 
 type todoService struct {
-	todoRepository model.TodoRepository
+	todoRepository repository.TodoRepository
 }
 
-func (this *todoService) CreateTodo(request CreateTodoRequest) err {
+func (this *todoService) CreateTodo(request CreateTodoRequest) error {
 	todo, err := this.createTodoFromRequest(request)
 	if err != nil {
 		return err
 	}
-	// err := this.todoRepository.CreateTodo(todo)
-	// if err != nil {
-	// 	return err
-	// }
+	err = this.todoRepository.CreateTodo(todo)
+	if err != nil {
+		return err
+	}
 	return nil
+}
+
+func (this *todoService) GetTodos() ([]model.Todo, error) {
+	todosDao, err := this.todoRepository.GetTodos()
+	if err != nil {
+		return nil, err
+	}
+	todos := this.mapTodoDaoToModel(todosDao)
+	return todos, nil
+}
+
+func (this *todoService) mapTodoDaoToModel(todosDao []repository.TodoDao) []model.Todo {
+	var todos []model.Todo
+	for _, todoDao := range todosDao {
+		todos = append(todos, model.Todo{Name: todoDao.Name, IsPending: todoDao.IsPending})
+	}
+	return todos
+}
+
+func (this *todoService) createTodoFromRequest(request CreateTodoRequest) (model.Todo, error) {
+	return model.NewTodo(request.Name), nil
 }
