@@ -11,7 +11,7 @@ import (
 
 func Test_shouldCreateTodo(t *testing.T) {
 	mongoProvider, err := mgo.Dial("localhost")
-	todo := model.NewTodo("todo 1")
+	todo := model.NewTodo("todo 1", bson.NewObjectId().Hex())
 	repository := NewTodoRepository(mongoProvider, "todo")
 	err = repository.CreateTodo(todo)
 	assert.Nil(t, err)

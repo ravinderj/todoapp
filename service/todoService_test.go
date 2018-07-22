@@ -40,7 +40,7 @@ func Test_shouldGetTodos(t *testing.T) {
 		Name:      "todo 1",
 		IsPending: false,
 	}
-	todo := model.NewTodo("todo 1")
+	todo := model.NewTodo("todo 1", "3132333435")
 	mockRepository.On("GetTodos", mock.Anything).Return([]repository.TodoDao{todoDao}, nil)
 	service := NewTodoService(mockRepository)
 	todos, err := service.GetTodos()

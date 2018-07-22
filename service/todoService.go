@@ -46,7 +46,7 @@ func (this *todoService) GetTodos() ([]model.Todo, error) {
 func (this *todoService) mapTodoDaoToModel(todosDao []repository.TodoDao) []model.Todo {
 	var todos []model.Todo
 	for _, todoDao := range todosDao {
-		todos = append(todos, model.Todo{Name: todoDao.Name, IsPending: todoDao.IsPending})
+		todos = append(todos, model.Todo{Id: todoDao.Id.Hex(), Name: todoDao.Name, IsPending: todoDao.IsPending})
 	}
 	return todos
 }

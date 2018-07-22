@@ -44,7 +44,7 @@ func Test_shouldCreateTodo(t *testing.T) {
 
 func Test_shouldGetTodoList(t *testing.T) {
 	service := new(mockService)
-	service.On("GetTodos", mock.Anything).Return([]model.Todo{model.Todo{Name: "todo 1", IsPending: false}}, nil)
+	service.On("GetTodos", mock.Anything).Return([]model.Todo{model.Todo{Id: "id", Name: "todo 1", IsPending: false}}, nil)
 	handler := NewTodoHandler(service)
 	context, responseRecorder := getMockedDefaultContext()
 	context.Request = httptest.NewRequest("GET", "http://localhost/todos/list", nil)
@@ -53,7 +53,7 @@ func Test_shouldGetTodoList(t *testing.T) {
 	assert.True(t, len(context.Errors) == 0)
 
 	assert.Equal(t, 200, responseRecorder.Code)
-	assert.Equal(t, `[{"name":"todo 1","isPending":false}]`, responseRecorder.Body.String())
+	assert.Equal(t, `[{"id":"id","name":"todo 1","isPending":false}]`, responseRecorder.Body.String())
 }
 
 func getMockedDefaultContext() (*gin.Context, *httptest.ResponseRecorder) {
