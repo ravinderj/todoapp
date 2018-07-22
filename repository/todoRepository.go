@@ -17,8 +17,8 @@ type todoRepository struct {
 	dbName   string
 }
 
-func NewTodoRepository(provider *mgo.Session, dbName string) todoRepository {
-	return todoRepository{
+func NewTodoRepository(provider *mgo.Session, dbName string) *todoRepository {
+	return &todoRepository{
 		provider: provider,
 		dbName:   dbName,
 	}

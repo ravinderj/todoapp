@@ -2,14 +2,18 @@ package app
 
 import (
 	"todoapp/handler"
-	"todoapp/model"
+	"todoapp/repository"
+	"todoapp/service"
 
 	"github.com/gin-gonic/gin"
+	mgo "gopkg.in/mgo.v2"
 )
 
 func SetupRouter() *gin.Engine {
-	var todos []model.Todo
-	todoHandler := handler.NewTodoHandler(todos)
+	mongoProvider, _ := mgo.Dial("localhost")
+	todoRepository := repository.NewTodoRepository(mongoProvider, "todo")
+	todoService := service.NewTodoService(todoRepository)
+	todoHandler := handler.NewTodoHandler(todoService)
 	router := gin.Default()
 	router.GET("/", serveHome)
 	router.GET("todos/list", todoHandler.GetTodoList)
