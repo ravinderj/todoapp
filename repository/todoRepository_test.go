@@ -21,6 +21,7 @@ func Test_shouldCreateTodo(t *testing.T) {
 	assert.Equal(t, "todo 1", todoDao.Name)
 	assert.Equal(t, false, todoDao.IsPending)
 	collection.DropCollection()
+	mongoProvider.Close()
 }
 
 func Test_shouldGetTodos(t *testing.T) {
@@ -33,4 +34,5 @@ func Test_shouldGetTodos(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, []TodoDao{todoDao}, todos)
 	collection.DropCollection()
+	mongoProvider.Close()
 }

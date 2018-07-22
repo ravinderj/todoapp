@@ -5,6 +5,6 @@
 [ ] router
   [ ] setup routing
 [ ] Add Todo to database
-  [ ] Add todo to database
   [ ] Add todo item to database
   [ ] Update todo
+  [X] Add todo to database
