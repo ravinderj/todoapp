@@ -28,7 +28,7 @@ func (this *todoRepository) CreateTodo(todo model.Todo) error {
 	session := this.provider.Copy()
 	defer session.Close()
 	todoCollection := session.DB(this.dbName).C("todo")
-	objectId := bson.NewObjectId()
+	objectId := bson.ObjectIdHex(todo.Id)
 	err := todoCollection.Insert(TodoDao{
 		Id:        objectId,
 		Name:      todo.Name,

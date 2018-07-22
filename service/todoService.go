@@ -3,6 +3,8 @@ package service
 import (
 	"todoapp/model"
 	"todoapp/repository"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 type TodoService interface {
@@ -50,5 +52,6 @@ func (this *todoService) mapTodoDaoToModel(todosDao []repository.TodoDao) []mode
 }
 
 func (this *todoService) createTodoFromRequest(request CreateTodoRequest) (model.Todo, error) {
-	return model.NewTodo(request.Name), nil
+	todoId := bson.NewObjectId().Hex()
+	return model.NewTodo(request.Name, todoId), nil
 }
