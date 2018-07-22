@@ -14,12 +14,20 @@ type TodoRepository interface {
 
 type todoRepository struct {
 	provider *mgo.Session
+	dbName   string
+}
+
+func NewTodoRepository(provider *mgo.Session, dbName string) todoRepository {
+	return todoRepository{
+		provider: provider,
+		dbName:   dbName,
+	}
 }
 
 func (this *todoRepository) CreateTodo(todo model.Todo) error {
 	session := this.provider.Copy()
 	defer session.Close()
-	todoCollection := session.DB("todo").C("todo")
+	todoCollection := session.DB(this.dbName).C("todo")
 	objectId := bson.NewObjectId()
 	err := todoCollection.Insert(TodoDao{
 		Id:        objectId,
