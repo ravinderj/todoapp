@@ -18,6 +18,7 @@ func SetupRouter() *gin.Engine {
 	router.GET("/", serveHome)
 	router.GET("todos/list", todoHandler.GetTodoList)
 	router.POST("todo", todoHandler.CreateTodo)
+	router.DELETE("todo/:todoId", todoHandler.DeleteTodo)
 	return router
 }
 

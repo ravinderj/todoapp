@@ -27,6 +27,11 @@ func (o mockService) GetTodos() ([]model.Todo, error) {
 	return args.Get(0).([]model.Todo), args.Error(1)
 }
 
+func (o mockService) DeleteTodo(request service.DeleteTodoRequest) error {
+	args := o.Called(request)
+	return args.Error(0)
+}
+
 func Test_shouldCreateTodo(t *testing.T) {
 	service := new(mockService)
 	service.On("CreateTodo", mock.Anything).Return(nil)

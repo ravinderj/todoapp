@@ -24,6 +24,11 @@ func (o mockRepository) GetTodos() ([]repository.TodoDao, error) {
 	return args.Get(0).([]repository.TodoDao), args.Error(1)
 }
 
+func (o mockRepository) DropTodo(todoId string) error {
+	args := o.Called()
+	return args.Error(0)
+}
+
 func Test_shouldCreateTodo(t *testing.T) {
 	repository := new(mockRepository)
 	repository.On("CreateTodo", mock.Anything).Return(nil)

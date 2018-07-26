@@ -9,6 +9,7 @@ import (
 
 type TodoRepository interface {
 	CreateTodo(todo model.Todo) error
+	DropTodo(todoId string) error
 	GetTodos() ([]TodoDao, error)
 }
 
@@ -38,6 +39,14 @@ func (this *todoRepository) CreateTodo(todo model.Todo) error {
 		return err
 	}
 	return nil
+}
+
+func (this *todoRepository) DropTodo(referenceId string) error {
+	session := this.provider.Copy()
+	defer session.Close()
+	todoId := bson.ObjectIdHex(referenceId)
+	err := session.DB(this.dbName).C("todo").RemoveId(todoId)
+	return err
 }
 
 func (this *todoRepository) GetTodos() ([]TodoDao, error) {

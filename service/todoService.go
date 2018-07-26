@@ -9,6 +9,7 @@ import (
 
 type TodoService interface {
 	CreateTodo(request CreateTodoRequest) error
+	DeleteTodo(request DeleteTodoRequest) error
 	GetTodos() ([]model.Todo, error)
 }
 
@@ -32,6 +33,12 @@ func (this *todoService) CreateTodo(request CreateTodoRequest) error {
 		return err
 	}
 	return nil
+}
+
+func (this *todoService) DeleteTodo(request DeleteTodoRequest) error {
+	todoId := request.TodoId
+	err := this.todoRepository.DropTodo(todoId)
+	return err
 }
 
 func (this *todoService) GetTodos() ([]model.Todo, error) {
