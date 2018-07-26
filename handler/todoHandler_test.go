@@ -41,10 +41,8 @@ func Test_shouldCreateTodo(t *testing.T) {
 	context.Request.Header.Set("Content-Type", "application/json")
 	handler.CreateTodo(context)
 
-	// assert.Equal(t, "hell", context.Errors.Last().Error())
 	assert.True(t, len(context.Errors) == 0)
 	assert.Equal(t, 201, responseRecorder.Code)
-	// assert.Equal(t, `{"id":1,"name":"New Todo"}`, responseRecorder.Body.String())
 }
 
 func Test_shouldGetTodoList(t *testing.T) {
@@ -59,6 +57,20 @@ func Test_shouldGetTodoList(t *testing.T) {
 
 	assert.Equal(t, 200, responseRecorder.Code)
 	assert.Equal(t, `[{"id":"id","name":"todo 1","isPending":false}]`, responseRecorder.Body.String())
+}
+
+func Test_shouldDeleteTodoList(t *testing.T) {
+	service := new(mockService)
+	service.On("DeleteTodo", mock.Anything).Return(nil)
+	handler := NewTodoHandler(service)
+	context, responseRecorder := getMockedDefaultContext()
+	context.Request = httptest.NewRequest("DELETE", "http://localhost/todo/abc123", nil)
+	context.Params = []gin.Param{
+		{Key: "todoId", Value: "abc123"},
+	}
+	handler.DeleteTodo(context)
+	assert.True(t, len(context.Errors) == 0)
+	assert.Equal(t, 200, responseRecorder.Code)
 }
 
 func getMockedDefaultContext() (*gin.Context, *httptest.ResponseRecorder) {

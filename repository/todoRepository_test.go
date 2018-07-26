@@ -19,7 +19,7 @@ func Test_shouldCreateTodo(t *testing.T) {
 	collection := mongoProvider.Copy().DB("todo").C("todo")
 	collection.Find(bson.M{}).One(&todoDao)
 	assert.Equal(t, "todo 1", todoDao.Name)
-	assert.Equal(t, false, todoDao.IsPending)
+	assert.Equal(t, true, todoDao.IsPending)
 	collection.DropCollection()
 	mongoProvider.Close()
 }
@@ -41,7 +41,7 @@ func Test_shouldDeleteTodo(t *testing.T) {
 	mongoProvider.Close()
 }
 
-func iTest_shouldGetTodos(t *testing.T) {
+func Test_shouldGetTodos(t *testing.T) {
 	mongoProvider, err := mgo.Dial("localhost")
 	todoDao := TodoDao{Id: bson.ObjectId("123456789012"), Name: "todo 2", IsPending: false}
 	collection := mongoProvider.Copy().DB("todo").C("todo")

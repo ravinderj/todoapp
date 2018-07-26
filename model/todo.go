@@ -11,6 +11,6 @@ func NewTodo(name string, id string) Todo {
 	return Todo{
 		Id:        id,
 		Name:      name,
-		IsPending: false,
+		IsPending: true,
 	}
 }

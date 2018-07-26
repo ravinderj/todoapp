@@ -38,12 +38,21 @@ func Test_shouldCreateTodo(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func Test_shouldDeleteTodo(t *testing.T) {
+	repository := new(mockRepository)
+	repository.On("DropTodo", mock.Anything).Return(nil)
+	service := NewTodoService(repository)
+	deleteTodoRequest := DeleteTodoRequest{TodoId: "todoId"}
+	err := service.DeleteTodo(deleteTodoRequest)
+	assert.Nil(t, err)
+}
+
 func Test_shouldGetTodos(t *testing.T) {
 	mockRepository := new(mockRepository)
 	todoDao := repository.TodoDao{
 		Id:        bson.ObjectId("12345"),
 		Name:      "todo 1",
-		IsPending: false,
+		IsPending: true,
 	}
 	todo := model.NewTodo("todo 1", "3132333435")
 	mockRepository.On("GetTodos", mock.Anything).Return([]repository.TodoDao{todoDao}, nil)
