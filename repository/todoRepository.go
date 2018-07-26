@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"todoapp/model"
 
 	mgo "gopkg.in/mgo.v2"
@@ -44,6 +45,9 @@ func (this *todoRepository) CreateTodo(todo model.Todo) error {
 func (this *todoRepository) DropTodo(referenceId string) error {
 	session := this.provider.Copy()
 	defer session.Close()
+	if !bson.IsObjectIdHex(referenceId) {
+		return errors.New("invalid reference id")
+	}
 	todoId := bson.ObjectIdHex(referenceId)
 	err := session.DB(this.dbName).C("todo").RemoveId(todoId)
 	return err
