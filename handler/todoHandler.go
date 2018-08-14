@@ -29,11 +29,11 @@ func (this *todoHandler) GetTodoList(context *gin.Context) {
 func (this *todoHandler) CreateTodo(context *gin.Context) {
 	request := service.CreateTodoRequest{}
 	context.Bind(&request)
-	err := this.todoService.CreateTodo(request)
+	createTodoResponse, err := this.todoService.CreateTodo(request)
 	if err != nil {
 		context.Error(err)
 	}
-	context.JSON(http.StatusCreated, nil)
+	context.JSON(http.StatusCreated, createTodoResponse)
 }
 
 func (this *todoHandler) DeleteTodo(context *gin.Context) {

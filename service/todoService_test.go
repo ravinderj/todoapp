@@ -34,8 +34,9 @@ func Test_shouldCreateTodo(t *testing.T) {
 	repository.On("CreateTodo", mock.Anything).Return(nil)
 	service := NewTodoService(repository)
 	createTodoRequest := CreateTodoRequest{Name: "todo 1"}
-	err := service.CreateTodo(createTodoRequest)
+	todo, err := service.CreateTodo(createTodoRequest)
 	assert.Nil(t, err)
+	assert.Equal(t, todo.Name, "todo 1")
 }
 
 func Test_shouldDeleteTodo(t *testing.T) {

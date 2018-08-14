@@ -36,10 +36,7 @@ func (this *todoRepository) CreateTodo(todo model.Todo) error {
 		Name:      todo.Name,
 		IsPending: todo.IsPending,
 	})
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func (this *todoRepository) DropTodo(referenceId string) error {

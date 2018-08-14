@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"todoapp/model"
 	"todoapp/repository"
 
@@ -8,7 +9,7 @@ import (
 )
 
 type TodoService interface {
-	CreateTodo(request CreateTodoRequest) error
+	CreateTodo(request CreateTodoRequest) (model.Todo, error)
 	DeleteTodo(request DeleteTodoRequest) error
 	GetTodos() ([]model.Todo, error)
 }
@@ -23,16 +24,13 @@ func NewTodoService(todoRepository repository.TodoRepository) *todoService {
 	}
 }
 
-func (this *todoService) CreateTodo(request CreateTodoRequest) error {
+func (this *todoService) CreateTodo(request CreateTodoRequest) (model.Todo, error) {
 	todo, err := this.createTodoFromRequest(request)
 	if err != nil {
-		return err
+		return model.Todo{}, err
 	}
 	err = this.todoRepository.CreateTodo(todo)
-	if err != nil {
-		return err
-	}
-	return nil
+	return todo, err
 }
 
 func (this *todoService) DeleteTodo(request DeleteTodoRequest) error {
@@ -60,5 +58,8 @@ func (this *todoService) mapTodoDaoToModel(todosDao []repository.TodoDao) []mode
 
 func (this *todoService) createTodoFromRequest(request CreateTodoRequest) (model.Todo, error) {
 	todoId := bson.NewObjectId().Hex()
-	return model.NewTodo(request.Name, todoId), nil
+	if request.Name != "" {
+		return model.NewTodo(request.Name, todoId), nil
+	}
+	return model.Todo{}, errors.New("Invalid name")
 }

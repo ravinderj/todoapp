@@ -17,9 +17,9 @@ type mockService struct {
 	mock.Mock
 }
 
-func (o mockService) CreateTodo(request service.CreateTodoRequest) error {
+func (o mockService) CreateTodo(request service.CreateTodoRequest) (model.Todo, error) {
 	args := o.Called(request)
-	return args.Error(0)
+	return args.Get(0).(model.Todo), args.Error(1)
 }
 
 func (o mockService) GetTodos() ([]model.Todo, error) {
@@ -34,7 +34,7 @@ func (o mockService) DeleteTodo(request service.DeleteTodoRequest) error {
 
 func Test_shouldCreateTodo(t *testing.T) {
 	service := new(mockService)
-	service.On("CreateTodo", mock.Anything).Return(nil)
+	service.On("CreateTodo", mock.Anything).Return(model.Todo{}, nil)
 	handler := NewTodoHandler(service)
 	context, responseRecorder := getMockedDefaultContext()
 	context.Request = httptest.NewRequest("POST", "http://localhost/todos", strings.NewReader(`{"name":"New Todo"}`))
