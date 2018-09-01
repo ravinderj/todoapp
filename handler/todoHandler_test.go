@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 	"todoapp/model"
 	"todoapp/service"
@@ -37,8 +36,6 @@ func Test_shouldCreateTodo(t *testing.T) {
 	service.On("CreateTodo", mock.Anything).Return(model.Todo{}, nil)
 	handler := NewTodoHandler(service)
 	context, responseRecorder := getMockedDefaultContext()
-	context.Request = httptest.NewRequest("POST", "http://localhost/todos", strings.NewReader(`{"name":"New Todo"}`))
-	context.Request.Header.Set("Content-Type", "application/json")
 	handler.CreateTodo(context)
 
 	assert.True(t, len(context.Errors) == 0)
@@ -50,11 +47,9 @@ func Test_shouldGetTodoList(t *testing.T) {
 	service.On("GetTodos", mock.Anything).Return([]model.Todo{model.Todo{Id: "id", Name: "todo 1", IsPending: false}}, nil)
 	handler := NewTodoHandler(service)
 	context, responseRecorder := getMockedDefaultContext()
-	context.Request = httptest.NewRequest("GET", "http://localhost/todos/list", nil)
 	handler.GetTodoList(context)
 
 	assert.True(t, len(context.Errors) == 0)
-
 	assert.Equal(t, 200, responseRecorder.Code)
 	assert.Equal(t, `[{"id":"id","name":"todo 1","isPending":false}]`, responseRecorder.Body.String())
 }
@@ -64,7 +59,6 @@ func Test_shouldDeleteTodoList(t *testing.T) {
 	service.On("DeleteTodo", mock.Anything).Return(nil)
 	handler := NewTodoHandler(service)
 	context, responseRecorder := getMockedDefaultContext()
-	context.Request = httptest.NewRequest("DELETE", "http://localhost/todo/abc123", nil)
 	context.Params = []gin.Param{
 		{Key: "todoId", Value: "abc123"},
 	}

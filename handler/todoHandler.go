@@ -52,7 +52,7 @@ func (this *todoHandler) getDeleteTodoRequest(context *gin.Context) service.Dele
 	request := service.DeleteTodoRequest{}
 	todoId, hasValue := context.Params.Get("todoId")
 	if !hasValue || todoId == "" {
-		context.Error(errors.New("missing todoId"))
+		context.Error(errors.New("Missing todo reference Id"))
 		return request
 	}
 	request.TodoId = todoId

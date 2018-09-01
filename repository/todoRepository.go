@@ -43,7 +43,7 @@ func (this *todoRepository) DropTodo(referenceId string) error {
 	session := this.provider.Copy()
 	defer session.Close()
 	if !bson.IsObjectIdHex(referenceId) {
-		return errors.New("invalid reference id")
+		return errors.New("Invalid todo reference id")
 	}
 	todoId := bson.ObjectIdHex(referenceId)
 	err := session.DB(this.dbName).C("todo").RemoveId(todoId)
