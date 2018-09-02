@@ -11,45 +11,48 @@ import (
 
 func Test_shouldCreateTodo(t *testing.T) {
 	mongoProvider, err := mgo.Dial("localhost")
-	todo := model.NewTodo("todo 1", bson.NewObjectId().Hex())
+	collection := mongoProvider.Copy().DB("todo").C("todo")
+	collection.DropCollection()
+
+	todo := model.NewTodo("todo 1", bson.ObjectId("123456789012").Hex())
 	repository := NewTodoRepository(mongoProvider, "todo")
 	err = repository.CreateTodo(todo)
 	assert.Nil(t, err)
+
 	var todoDao TodoDao
-	collection := mongoProvider.Copy().DB("todo").C("todo")
 	collection.Find(bson.M{}).One(&todoDao)
-	assert.Equal(t, "todo 1", todoDao.Name)
-	assert.Equal(t, true, todoDao.IsPending)
-	collection.DropCollection()
+	assert.Equal(t, todoDao, TodoDao{Id: bson.ObjectId("123456789012"), Name: "todo 1", IsPending: true})
 	mongoProvider.Close()
 }
 
 func Test_shouldDeleteTodo(t *testing.T) {
 	mongoProvider, _ := mgo.Dial("localhost")
-	objectId := bson.ObjectId("123456789012")
-	todoDao := TodoDao{Id: objectId, Name: "todo 2", IsPending: false}
 	collection := mongoProvider.Copy().DB("todo").C("todo")
+	collection.DropCollection()
+
+	objectID := bson.ObjectId("123456789012")
+	todoDao := TodoDao{Id: objectID, Name: "todo 2", IsPending: false}
 	collection.Insert(todoDao)
 
 	repository := NewTodoRepository(mongoProvider, "todo")
-	repository.DropTodo(objectId.Hex())
-	var todo TodoDao
-	collection.Find(bson.M{}).One(&todo)
-	assert.Equal(t, "", todo.Name)
-	assert.Equal(t, bson.ObjectId(""), todo.Id)
-	// collection.DropCollection()
+	repository.DropTodo(objectID.Hex())
+	var todos []TodoDao
+	collection.Find(bson.M{}).All(&todos)
+	assert.Equal(t, 0, len(todos))
 	mongoProvider.Close()
 }
 
 func Test_shouldGetTodos(t *testing.T) {
 	mongoProvider, err := mgo.Dial("localhost")
-	todoDao := TodoDao{Id: bson.ObjectId("123456789012"), Name: "todo 2", IsPending: false}
 	collection := mongoProvider.Copy().DB("todo").C("todo")
+	collection.DropCollection()
+
+	todoDao := TodoDao{Id: bson.ObjectId("123456789012"), Name: "todo 2", IsPending: false}
 	err = collection.Insert(todoDao)
+
 	repository := NewTodoRepository(mongoProvider, "todo")
 	todos, err := repository.GetTodos()
 	assert.Nil(t, err)
 	assert.Equal(t, []TodoDao{todoDao}, todos)
-	collection.DropCollection()
 	mongoProvider.Close()
 }
